@@ -61,3 +61,18 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Other stuff
+*.properties
+.xml
+*.html
+*.jnlp
+*.js
+/dist
+/nbproject
+/build
+build.xml
+.png
+.gif
+*.mf
+project.xml
