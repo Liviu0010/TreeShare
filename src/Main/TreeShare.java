@@ -6,6 +6,7 @@
 package Main;
 
 import Interface.SceneHolder;
+import java.net.InetAddress;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,6 +29,8 @@ public class TreeShare extends Application {
         SceneHolder.getInstance().setMainPage(new Scene(FXMLLoader.load(getClass().getResource("/Interface/Pages/MainPage.fxml"))));
         SceneHolder.getInstance().setDownloadingPage(new Scene(FXMLLoader.load(getClass().getResource("/Interface/Pages/DownloadingPage.fxml"))));
         SceneHolder.getInstance().setSharePage(new Scene(FXMLLoader.load(getClass().getResource("/Interface/Pages/SharePage.fxml"))));
+        
+        //System.out.println(InetAddress.getLocalHost().getHostAddress());
         
         stage.setScene(scene);
         stage.show();
