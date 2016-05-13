@@ -66,10 +66,19 @@ public class SharePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ArrayList<File> sharedFiles = FileSharing.FileSharingManager.getInstance().getSharedFiles();
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                ArrayList<File> sharedFiles = FileSharing.FileSharingManager.getInstance().getSharedFiles();
+                
+                for(int i = 0; i<sharedFiles.size(); i++)
+                    synchronized(sharedFilesList.getItems()){
+                        sharedFilesList.getItems().add(sharedFiles.get(i));
+                    }
+            }
+        });
         
-        for(int i = 0; i<sharedFiles.size(); i++)
-            sharedFilesList.getItems().add(sharedFiles.get(i));
+        t.start();
         
         fileChooser = new FileChooser();
     }    

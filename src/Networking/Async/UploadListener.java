@@ -5,16 +5,16 @@
  */
 package Networking.Async;
 
-import Networking.Messages.ConnectionRequest;
 import Networking.Messages.ConnectionResponse;
-import Networking.Messages.Message;
 import Networking.NetworkManager;
 import Networking.NetworkNode;
+import Networking.PrivateRequests.DownloadRequest;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,71 +22,82 @@ import java.util.logging.Logger;
  *
  * @author Liviu
  */
-public class ConnectionListener extends NetworkThread{
+public class UploadListener extends NetworkThread{
+    private static UploadListener instance;
+    
     ServerSocket serverSocket;
     
-    public ConnectionListener(){
+    private UploadListener(){
         try {
-            serverSocket = new ServerSocket(50000, 100);
+            serverSocket = new ServerSocket(50101, 100);
         } catch (IOException ex) {
-            Logger.getLogger(ConnectionListener.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UploadListener.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static UploadListener getInstance(){
+        if(instance == null){
+            instance = new UploadListener();
+        }
+        
+        return instance;
+    }
+    
+    public void startListening(){
+        instance.start();
     }
     
     @Override
     public void run(){
-        Socket current;
-        Message msg;
-        int port;
-        ObjectInputStream objectInputStream;
         ObjectOutputStream objectOutputStream;
+        ObjectInputStream objectInputStream;
+        Socket current;
+        DownloadRequest message;
         ConnectionResponse response;
-        Listener listener;
+        UploadConnectionListener uploadConnectionListener;
+        int port;
         
         while(running){
             try {
                 current = serverSocket.accept();
                 
                 current.setSoTimeout(10000);
+                
                 objectOutputStream = new ObjectOutputStream(current.getOutputStream());
                 objectInputStream = new ObjectInputStream(current.getInputStream());
-                msg = (Message) objectInputStream.readObject();
                 
-                if(msg instanceof ConnectionRequest){
-                    port = NetworkManager.getInstance().reservePort();
+                message = (DownloadRequest) objectInputStream.readObject();
+                
+                try{
+                    port = NetworkManager.getInstance().reserveUploadPort();
                     response = new ConnectionResponse(port);
                     response.addVisited(new NetworkNode(port));
-                    
-                    //listens for incoming connections on that port
-                    listener = new Listener(port);
-                    listener.start();
-                    //
+                    uploadConnectionListener = new UploadConnectionListener(port, message.getFile());
+                    uploadConnectionListener.start();
                     
                     objectOutputStream.writeObject(response);
-                    objectOutputStream.close();
-                    
-                    //TESTING
-                    System.out.println("Assigned port "+port+" to "+current.getInetAddress().getHostAddress());
-                    //END
+                }
+                catch(ClassCastException ex){
+                    Logger.getLogger(UploadListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 current.close();
                 
             } catch (IOException | ClassNotFoundException ex) {
                 if(running == true)
-                    Logger.getLogger(ConnectionListener.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UploadListener.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
     
     @Override
     public void stopRunning(){
         running = false;
-        
         try {
             serverSocket.close();
         } catch (IOException ex) {
-            Logger.getLogger(ConnectionListener.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UploadListener.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

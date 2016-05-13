@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65" fx:controller="Interface.Controllers.SharePageController">
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interface.Controllers.SharePageController">
    <children>
       <GridPane layoutX="11.0" layoutY="14.0" prefHeight="80.0" prefWidth="880.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="10.0">
         <columnConstraints>
@@ -19,8 +18,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button onAction="#buttonAction" fx:id="backButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Back" GridPane.halignment="LEFT" />
-            <Button onAction="#buttonAction" fx:id="removeButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Remove" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#buttonAction" prefHeight="50.0" prefWidth="150.0" text="Back" GridPane.halignment="LEFT" />
+            <Button fx:id="removeButton" mnemonicParsing="false" onAction="#buttonAction" prefHeight="50.0" prefWidth="150.0" text="Remove" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
          </children>
       </GridPane>
       <GridPane layoutX="11.0" layoutY="636.0" prefHeight="50.0" prefWidth="879.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="10.0">
@@ -31,7 +30,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button onAction="#buttonAction" fx:id="addFilesButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Add Files" GridPane.halignment="CENTER" />
+            <Button fx:id="addFilesButton" mnemonicParsing="false" onAction="#buttonAction" prefHeight="50.0" prefWidth="150.0" text="Add Files" GridPane.halignment="CENTER" />
          </children>
       </GridPane>
       <ListView fx:id="sharedFilesList" layoutX="14.0" layoutY="98.0" prefHeight="527.0" prefWidth="880.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="98.0" />

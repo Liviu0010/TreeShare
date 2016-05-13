@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author Liviu
  */
 public class Message extends NetworkObject {
-    private final ArrayList<NetworkNode> visited;
+    protected ArrayList<NetworkNode> visited;
     
     public Message(){
         visited = new ArrayList<>();

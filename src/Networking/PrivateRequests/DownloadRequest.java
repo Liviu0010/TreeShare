@@ -7,18 +7,19 @@ package Networking.PrivateRequests;
 
 import Networking.NetworkObject;
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  *
  * @author Liviu
  */
 public class DownloadRequest extends NetworkObject{
-    private ArrayList<File> toDownload;
+    private File toDownload;
     
-    public DownloadRequest(ArrayList<File> toDownload){
-        for(int i = 0; i < toDownload.size(); i++){
-            this.toDownload.add(toDownload.get(i));
-        }
+    public DownloadRequest(File toDownload){
+        this.toDownload = toDownload;
+    }
+    
+    public File getFile(){
+        return toDownload;
     }
 }

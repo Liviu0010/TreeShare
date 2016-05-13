@@ -9,12 +9,13 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interface.Controllers.ConnectPageController">
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interface.Controllers.ConnectPageController">
    <children>
       <GridPane layoutX="116.0" layoutY="159.0" prefHeight="503.0" prefWidth="745.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
           <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="442.0" minWidth="50.0" prefWidth="50.0" />
           <ColumnConstraints hgrow="ALWAYS" maxWidth="871.0" minWidth="10.0" prefWidth="851.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="871.0" minWidth="10.0" prefWidth="851.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="391.0" minHeight="10.0" prefHeight="360.0" vgrow="SOMETIMES" />
@@ -22,7 +23,7 @@
           <RowConstraints maxHeight="227.0" minHeight="70.0" prefHeight="73.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="connectButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="48.0" prefWidth="885.0" text="Connect" GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <Button fx:id="connectButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="48.0" prefWidth="320.0" text="Connect" GridPane.columnSpan="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
@@ -32,7 +33,7 @@
                   <Insets top="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <TextField fx:id="portTextField" prefHeight="25.0" text="50000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets right="10.0" top="10.0" />
                </GridPane.margin>
@@ -42,11 +43,16 @@
                   <Insets bottom="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField prefHeight="25.0" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+            <TextField fx:id="addressTextField" prefHeight="25.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="10.0" right="10.0" />
                </GridPane.margin>
             </TextField>
+            <Button fx:id="rootButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="48.0" prefWidth="320.0" text="Root" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="10.0" />
+               </GridPane.margin>
+            </Button>
          </children>
       </GridPane>
    </children>

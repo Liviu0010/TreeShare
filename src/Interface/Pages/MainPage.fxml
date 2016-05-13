@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interface.Controllers.MainPageController">
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interface.Controllers.MainPageController">
    <children>
-      <Button fx:id="searchButton" onAction="#buttonAction" layoutX="16.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="147.0" text="Search" />
+      <Button fx:id="searchButton" layoutX="16.0" layoutY="39.0" mnemonicParsing="false" onAction="#buttonAction" prefHeight="25.0" prefWidth="147.0" text="Search" />
       <TextField fx:id="searchTextField" layoutX="166.0" layoutY="39.0" prefHeight="25.0" prefWidth="718.0" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="16.0" />
       <GridPane layoutX="13.0" layoutY="604.0" prefHeight="90.0" prefWidth="874.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="13.0">
         <columnConstraints>

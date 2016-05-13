@@ -44,6 +44,7 @@ public class Listener extends NetworkThread{
                 connection.start();
             }
             
+            serverSocket.close();
         } catch (SocketException ex) {
             Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

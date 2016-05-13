@@ -6,6 +6,9 @@
 package Interface.Controllers;
 
 import Interface.SceneHolder;
+import Networking.Async.ParentConnection;
+import Networking.NetworkManager;
+import Networking.NetworkNode;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -13,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
@@ -22,13 +26,21 @@ import javafx.stage.Stage;
 public class ConnectPageController implements Initializable {
     
     @FXML
-    private Button connectButton;
+    private Button connectButton, rootButton;
+    
+    @FXML private TextField portTextField, addressTextField;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
         Button b = (Button)event.getSource();
         
-        if(b == connectButton){
+        if(b == connectButton || b == rootButton){
+            if(b == connectButton){
+                ParentConnection.getInstance().setParent(new NetworkNode(addressTextField.getText(), Integer.parseInt(portTextField.getText())));
+                ParentConnection.getInstance().start();
+            }
+            
+            NetworkManager.getInstance().startListening();
             ((Stage)connectButton.getScene().getWindow()).setScene(SceneHolder.getInstance().getMainPage());
         }
     }

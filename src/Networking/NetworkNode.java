@@ -23,6 +23,11 @@ public class NetworkNode extends NetworkObject{
         address = null;
     }
     
+    public NetworkNode(String address){
+        this.port = -1;
+        this.address = address;
+    }
+    
     public int getPort(){
         return port;
     }

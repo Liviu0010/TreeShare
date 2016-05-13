@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author Liviu
  */
-public class SearchResult extends NetworkObject{
+public class SearchResult extends Message{
     private final ArrayList<OwnedFile> filesFound;
     
     public SearchResult(ArrayList<OwnedFile> found){

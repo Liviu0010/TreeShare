@@ -6,7 +6,6 @@
 package Networking.Messages;
 
 import Networking.NetworkNode;
-import Networking.NetworkObject;
 
 /**
  *

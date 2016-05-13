@@ -5,6 +5,7 @@
  */
 package Interface.Controllers;
 
+import Interface.DisplayedData;
 import Interface.SceneHolder;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -43,7 +44,7 @@ public class DownloadingPageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        downloadingList.getItems().addAll("I like", "turtles", "and", "also", "I like trains");
+        DisplayedData.getInstance().setDownloadingFiles(downloadingList);
     }    
     
 }
