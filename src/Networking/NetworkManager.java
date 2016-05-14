@@ -255,7 +255,8 @@ public class NetworkManager {
     public void stopAll(){
         UploadListener.getInstance().stopRunning();
         
-        ParentConnection.getInstance().stopRunning();
+        if(ParentConnection.getInstance().isReady())
+            ParentConnection.getInstance().stopRunning();
         
         if(connectionListener != null)
             connectionListener.stopRunning();
