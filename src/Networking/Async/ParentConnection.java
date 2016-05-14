@@ -20,6 +20,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +61,7 @@ public class ParentConnection extends NetworkThread{
     public void run(){
         ConnectionRequest connectionRequest;
         ConnectionResponse connectionResponse;
-        Message networkMessage;
+        Message networkMessage = null;
         
         try {
             connection = new Socket(address, 50000);
@@ -93,7 +94,15 @@ public class ParentConnection extends NetworkThread{
             System.out.println("Connected to "+connection.getInetAddress().getHostAddress()+" on port "+connection.getPort());
             
             while(running){
+                try{
                 networkMessage = (Message) objectInputStream.readObject();
+                }
+                catch(SocketException ex){
+                    if(running){
+                        Logger.getLogger(ParentConnection.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
                 
                 if(networkMessage instanceof SearchQuery){
                     SearchQuery search = (SearchQuery)networkMessage;
@@ -102,7 +111,7 @@ public class ParentConnection extends NetworkThread{
                     SearchResult result;
                     
                     for(int i = 0; i < shared.size(); i++){
-                        if(shared.get(i).getName().contains(search.getSearchString()))
+                        if(shared.get(i).getName().toLowerCase().contains(search.getSearchString().toLowerCase()))
                             results.add(new OwnedFile(shared.get(i), new NetworkNode(InetAddress.getLocalHost().getHostAddress())));
                     }
                     
@@ -165,5 +174,16 @@ public class ParentConnection extends NetworkThread{
         });
         
         t.start();
+    }
+    
+    @Override
+    public void stopRunning(){
+        running = false;
+        
+        try {
+            connection.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionListener.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

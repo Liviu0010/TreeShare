@@ -7,6 +7,7 @@ package Interface.Controllers;
 
 import Interface.DisplayedData;
 import Interface.SceneHolder;
+import Networking.NetworkManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -32,6 +33,7 @@ public class DownloadingPageController implements Initializable {
         
         if(b == stopButton){
             System.out.println("Stopping download: "+downloadingList.getSelectionModel().getSelectedItem());
+            NetworkManager.getInstance().stopDownload((String)downloadingList.getSelectionModel().getSelectedItem());
         }
         
         if(b == backButton){

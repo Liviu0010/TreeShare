@@ -174,7 +174,7 @@ public class NetworkManager {
                 else if(result.getVisited().get(0).getAddress().compareTo(InetAddress.getLocalHost().getHostAddress()) == 0){
                     
                     
-                    updateSearchList(result);
+                    addToSearchList(result);
                     return;
                 }
                 else
@@ -182,12 +182,7 @@ public class NetworkManager {
                 
                 System.out.println(InetAddress.getLocalHost().getHostAddress()+" --- "+result.getVisited().get(0).getAddress());
                 
-                /*if(InetAddress.getLocalHost().getHostAddress().compareTo(nextNode.getAddress()) == 0){
-                    updateSearchList(result);
-                }*/
-                
-                if(ParentConnection.getInstance().isReady()&&ParentConnection.getInstance().getAddress().compareTo(nextNode.getAddress()) == 0){
-                    result.getVisited().remove(nextInd);
+                if(ParentConnection.getInstance().isReady() && ParentConnection.getInstance().getAddress().compareTo(nextNode.getAddress()) == 0){
                     ParentConnection.getInstance().sendMessage(result);
                 }
                 
@@ -205,7 +200,7 @@ public class NetworkManager {
         }
     }
     
-    private void updateSearchList(SearchResult result){
+    public void addToSearchList(SearchResult result){
         Platform.runLater(new Runnable(){
             @Override
             public void run(){
@@ -213,7 +208,7 @@ public class NetworkManager {
                 ListView downloads;
                 
                 while(!updated && !shutdownCalled){
-                    downloads = DisplayedData.getInstance().getDownloadingFiles();
+                    downloads = DisplayedData.getInstance().getSearchResults();
                     
                     if(downloads != null){
                         updated = true;
@@ -229,8 +224,23 @@ public class NetworkManager {
                 }
             }
         });
+    }
+    
+    public void downloadFile(OwnedFile toDownload){
+        DownloadConnection download = new DownloadConnection(toDownload);
+        downloadConnections.add(download);
+        download.start();
+    }
+    
+    public void stopDownload(String fileName){
         
-        //t.start();
+        for(int i = 0; i < downloadConnections.size(); i++){
+            if(downloadConnections.get(i).getFileString().compareTo(Util.Utilities.removePercentage(fileName)) == 0){
+                downloadConnections.get(i).stopRunning();
+                downloadConnections.remove(i);
+                break;
+            }
+        }
     }
     
     public void connectTo(NetworkNode target){
@@ -246,7 +256,7 @@ public class NetworkManager {
         UploadListener.getInstance().stopRunning();
         
         ParentConnection.getInstance().stopRunning();
-                
+        
         if(connectionListener != null)
             connectionListener.stopRunning();
         

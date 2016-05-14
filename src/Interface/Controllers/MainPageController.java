@@ -8,10 +8,12 @@ package Interface.Controllers;
 import Interface.DisplayedData;
 import Interface.SceneHolder;
 import Networking.Async.DownloadConnection;
+import Networking.Messages.SearchResult;
 import Networking.NetworkManager;
 import Networking.OwnedFile;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -41,6 +43,7 @@ public class MainPageController implements Initializable {
         Button b = (Button)e.getSource();
         
         if(b == searchButton){
+            resultList.getItems().clear();
             NetworkManager.getInstance().search(searchTextField.getText());
             System.out.println("Searching for: "+searchTextField.getText());
         }
@@ -51,8 +54,7 @@ public class MainPageController implements Initializable {
         }
         
         if(b == downloadButton){
-            DownloadConnection d = new DownloadConnection((OwnedFile)resultList.getSelectionModel().getSelectedItem());
-            d.start();
+            NetworkManager.getInstance().downloadFile((OwnedFile)resultList.getSelectionModel().getSelectedItem());
             System.out.println("Downloading: "+resultList.getSelectionModel().getSelectedItem());
         }
         

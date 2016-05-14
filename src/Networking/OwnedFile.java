@@ -15,34 +15,44 @@ import java.net.URI;
 
 public class OwnedFile extends File{
     private final NetworkNode owner;
+    private long size;
     
     public OwnedFile(String pathname) {
         super(pathname);
         this.owner = null;
+        this.size = this.length();
     }
     
     public OwnedFile(File parent, String child){
         super(parent, child);
         this.owner = null;
+        this.size = this.length();
     }
     
     public OwnedFile(String parent, String child){
         super(parent, child);
         this.owner = null;
+        this.size = this.length();
     }
     
     public OwnedFile(URI uri){
         super(uri);
         this.owner = null;
+        this.size = this.length();
     }
     
     public OwnedFile(File normalFile, NetworkNode owner){
         super(normalFile.toString());
         this.owner = owner;
+        this.size = this.length();
     }
     
     public NetworkNode getOwner(){
         return owner;
+    }
+    
+    public long size(){
+        return size;
     }
     
 }

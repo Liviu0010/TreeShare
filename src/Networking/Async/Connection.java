@@ -58,7 +58,7 @@ public class Connection extends NetworkThread{
                     SearchResult result;
                     
                     for(int i = 0; i < shared.size(); i++){
-                        if(shared.get(i).getName().contains(search.getSearchString()))
+                        if(shared.get(i).getName().toLowerCase().contains(search.getSearchString().toLowerCase()))
                             results.add(new OwnedFile(shared.get(i), new NetworkNode(InetAddress.getLocalHost().getHostAddress())));
                     }
                     
@@ -111,5 +111,16 @@ public class Connection extends NetworkThread{
         });
         
         t.start();
+    }
+    
+    @Override
+    public void stopRunning(){
+        running = false;
+        
+        try {
+            connection.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionListener.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -9,11 +9,13 @@ import Interface.SceneHolder;
 import Networking.Async.DownloadConnection;
 import Networking.Async.ParentConnection;
 import Networking.Async.UploadListener;
+import Networking.Messages.SearchResult;
 import Networking.NetworkManager;
 import Networking.NetworkNode;
 import Networking.OwnedFile;
 import java.io.File;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -57,6 +59,7 @@ public class TreeShare extends Application {
         stage.setHeight(700);
         stage.setScene(scene);
         stage.show();
+        //NetworkManager.getInstance().updateSearchList(new SearchResult(new ArrayList<OwnedFile>()));
     }
     
     @Override
