@@ -5,6 +5,11 @@
  */
 package Util;
 
+import Networking.NetworkManager;
+import Networking.NetworkNode;
+import java.io.PrintStream;
+import java.util.ArrayList;
+
 /**
  *
  * @author Liviu
@@ -29,5 +34,38 @@ public class Utilities {
         }
         
         return result;
+    }
+    
+    public static boolean visited(NetworkNode toCheck, ArrayList<NetworkNode> visited){
+        for(int i = 0; i<visited.size(); i++){
+            if(sameMAC(toCheck.getMACAddress(), visited.get(i).getMACAddress()))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    public static boolean sameMAC(byte[] MAC1, byte[] MAC2){
+        for(int i = 0; i<MAC1.length; i++){
+            if(MAC1[i] != MAC2[i])
+                return false;
+        }
+        
+        return true;
+    }
+    
+    public static void displayMAC(PrintStream ps, byte[] MAC){
+        if(MAC == null){
+            ps.println("null");
+            return;
+        }
+        
+        for(int i = 0; i<MAC.length; i++){
+            ps.print(MAC[i]);
+            if(i < MAC.length - 1)
+                ps.print(":");
+        }
+        
+        ps.println();
     }
 }

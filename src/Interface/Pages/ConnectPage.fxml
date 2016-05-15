@@ -16,14 +16,19 @@
           <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="442.0" minWidth="50.0" prefWidth="50.0" />
           <ColumnConstraints hgrow="ALWAYS" maxWidth="871.0" minWidth="10.0" prefWidth="851.0" />
             <ColumnConstraints hgrow="ALWAYS" maxWidth="871.0" minWidth="10.0" prefWidth="851.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="871.0" minWidth="10.0" prefWidth="851.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="391.0" minHeight="10.0" prefHeight="360.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="466.0" minHeight="10.0" prefHeight="237.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="391.0" minHeight="10.0" prefHeight="135.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="466.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="466.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="466.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="466.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="466.0" minHeight="10.0" prefHeight="77.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="227.0" minHeight="70.0" prefHeight="73.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="connectButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="48.0" prefWidth="320.0" text="Connect" GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <Button fx:id="connectButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="48.0" prefWidth="320.0" text="Connect" GridPane.columnSpan="2" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
@@ -33,7 +38,7 @@
                   <Insets top="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="portTextField" prefHeight="25.0" text="50000" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <TextField fx:id="portTextField" prefHeight="25.0" promptText="50000" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets right="10.0" top="10.0" />
                </GridPane.margin>
@@ -43,16 +48,40 @@
                   <Insets bottom="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="addressTextField" prefHeight="25.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
+            <TextField fx:id="addressTextField" prefHeight="25.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="10.0" right="10.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="rootButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="48.0" prefWidth="320.0" text="Root" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Button fx:id="rootButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="48.0" prefWidth="320.0" text="Root" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Button>
+            <TextField fx:id="netMsgTextField" promptText="50001" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextField fx:id="downloadReqTextField" promptText="50002" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextField fx:id="fileUploadTextField" promptText="50003" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <TextField fx:id="netConListenerTextField" promptText="50000" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="Network connection listener port" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets right="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Network messages port" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Download request listener port" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets right="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="File upload port" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+               <GridPane.margin>
+                  <Insets right="10.0" />
+               </GridPane.margin>
+            </Label>
          </children>
       </GridPane>
    </children>

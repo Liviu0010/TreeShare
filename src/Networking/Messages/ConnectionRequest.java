@@ -10,5 +10,13 @@ package Networking.Messages;
  * @author Liviu
  */
 public class ConnectionRequest extends Message{
+    private byte[] MAC;
     
+    public ConnectionRequest(byte[] MAC){
+        this.MAC = MAC;
+    }
+    
+    public byte[] getMAC(){
+        return MAC;
+    }
 }

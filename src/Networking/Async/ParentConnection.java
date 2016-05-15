@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class ParentConnection extends NetworkThread{
     Socket connection;
     String address;
     int port;
+    byte[] MAC;
     ObjectInputStream objectInputStream;
     ObjectOutputStream objectOutputStream;
     
@@ -64,13 +66,13 @@ public class ParentConnection extends NetworkThread{
         Message networkMessage = null;
         
         try {
-            connection = new Socket(address, 50000);
+            connection = new Socket(address, NetworkManager.getInstance().getNetworkConnectionListenerPort());
             connection.setSoTimeout(20000); //waits for 20 seconds
             
             objectOutputStream = new ObjectOutputStream(connection.getOutputStream());
             objectInputStream = new ObjectInputStream(connection.getInputStream());
             
-            connectionRequest = new ConnectionRequest();
+            connectionRequest = new ConnectionRequest(NetworkManager.getInstance().getMACAddress());
             
             objectOutputStream.writeObject(connectionRequest);
             
@@ -78,6 +80,8 @@ public class ParentConnection extends NetworkThread{
             
             if(connectionResponse.getAssignedPort() == -1)
                 return;
+            
+            this.MAC = connectionResponse.getMAC();
             
             objectOutputStream.close();
             objectInputStream.close();
@@ -116,7 +120,10 @@ public class ParentConnection extends NetworkThread{
                     }
                     
                     result = new SearchResult(results);
-                    search.addVisited(new NetworkNode(InetAddress.getLocalHost().getHostAddress()));
+                    search.addVisited(new NetworkNode(InetAddress.getLocalHost().getHostAddress(), 
+                            NetworkManager.getInstance().getMACAddress()));
+                    
+                    
                     
                     for(int i = 0; i < search.getVisited().size(); i++){
                         result.addVisited(search.getVisited().get(i));
@@ -124,7 +131,8 @@ public class ParentConnection extends NetworkThread{
                     
                     System.out.println("sent query");
                     
-                    NetworkManager.getInstance().sendResponse(result);      
+                    NetworkManager.getInstance().sendResponse(search);
+                    NetworkManager.getInstance().sendResponse(result);
                 }
                 
                 if(networkMessage instanceof SearchResult){
@@ -154,6 +162,10 @@ public class ParentConnection extends NetworkThread{
     
     public int getPort(){
         return port;
+    }
+    
+    public byte[] getMAC(){
+        return MAC;
     }
     
     

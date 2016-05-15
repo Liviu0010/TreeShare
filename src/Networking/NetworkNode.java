@@ -10,21 +10,30 @@ package Networking;
  * @author Liviu
  */
 public class NetworkNode extends NetworkObject{
-    private final String address;
-    private final int port;
+    private String address;
+    private int port = -1;
+    private byte[] MAC;
+    
+    public NetworkNode(String address, byte[] MAC){
+        this(address);
+        this.MAC = MAC;
+    }
+    
+    public NetworkNode(String address, int port, byte[] MAC){
+        this(address, port);
+        this.MAC = MAC;
+    }
     
     public NetworkNode(String address, int port) {
-        this.address = address;
+        this(address);
         this.port = port;
     }
     
     public NetworkNode(int port){
         this.port = port;
-        address = null;
     }
     
     public NetworkNode(String address){
-        this.port = -1;
         this.address = address;
     }
     
@@ -34,5 +43,9 @@ public class NetworkNode extends NetworkObject{
     
     public String getAddress(){
         return address;
+    }
+    
+    public byte[] getMACAddress(){
+        return MAC;
     }
 }

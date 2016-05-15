@@ -39,22 +39,7 @@ public class TreeShare extends Application {
         SceneHolder.getInstance().setMainPage(new Scene(FXMLLoader.load(getClass().getResource("/Interface/Pages/MainPage.fxml"))));
         SceneHolder.getInstance().setDownloadingPage(new Scene(FXMLLoader.load(getClass().getResource("/Interface/Pages/DownloadingPage.fxml"))));
         SceneHolder.getInstance().setSharePage(new Scene(FXMLLoader.load(getClass().getResource("/Interface/Pages/SharePage.fxml"))));
-        
-//TESTING GROUNDS
-        
-        //System.out.println(InetAddress.getLocalHost().getHostAddress());
-        
-        //ParentConnection.getInstance().setParent(new NetworkNode("localhost"));
-        //ParentConnection.getInstance().start();
-        
-        //NetworkManager.getInstance().startListening();
-        
-        File file = new File("C:/Users/Liviu/Pictures/Screenshots/Screenshot (1).png");
-        NetworkNode owner = new NetworkNode("192.168.0.132");
-        //DownloadConnection downloadConnection = new DownloadConnection(new OwnedFile(file, owner));
-        //downloadConnection.start();
-        UploadListener.getInstance().start();
-//END        
+               
         stage.setWidth(900);
         stage.setHeight(700);
         stage.setScene(scene);

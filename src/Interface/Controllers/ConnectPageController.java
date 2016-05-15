@@ -28,15 +28,53 @@ public class ConnectPageController implements Initializable {
     @FXML
     private Button connectButton, rootButton;
     
-    @FXML private TextField portTextField, addressTextField;
+    @FXML private TextField portTextField, addressTextField, netConListenerTextField, 
+            netMsgTextField, downloadReqTextField, fileUploadTextField;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
         Button b = (Button)event.getSource();
+        int netConListenerPort, netMsgPort, downloadReqPort, fileTransferPort, connectToPort;
+        
+        if(portTextField.getText().equals(""))
+            connectToPort = Integer.parseInt(portTextField.getPromptText());
+        else
+            connectToPort = Integer.parseInt(portTextField.getText());
+        
+        if(netConListenerTextField.getText().equals(""))
+            netConListenerPort = Integer.parseInt(netConListenerTextField.getPromptText());
+        else
+            netConListenerPort = Integer.parseInt(netConListenerTextField.getText());
+        
+        if(netMsgTextField.getText().equals(""))
+            netMsgPort = Integer.parseInt(netMsgTextField.getPromptText());
+        else
+            netMsgPort = Integer.parseInt(netMsgTextField.getText());
+        
+        if(downloadReqTextField.getText().equals(""))
+            downloadReqPort = Integer.parseInt(downloadReqTextField.getPromptText());
+        else
+            downloadReqPort = Integer.parseInt(downloadReqTextField.getText());
+        
+        if(fileUploadTextField.getText().equals(""))
+            fileTransferPort = Integer.parseInt(fileUploadTextField.getPromptText());
+        else
+            fileTransferPort = Integer.parseInt(fileUploadTextField.getText());
+        
+        NetworkManager.getInstance().setNetworkConnectionListenerPort(netConListenerPort);
+        NetworkManager.getInstance().setNetworkMessagesPort(netMsgPort);
+        NetworkManager.getInstance().setDownloadRequestListenerPort(downloadReqPort);
+        NetworkManager.getInstance().setFileTransferPort(fileTransferPort);
+        
+        System.out.println(NetworkManager.getInstance().getNetworkConnectionListenerPort());
+        System.out.println(NetworkManager.getInstance().getNetworkMessagesPort());
+        System.out.println(NetworkManager.getInstance().getDownloadRequestListenerPort());
+        System.out.println(NetworkManager.getInstance().getFileTransferPort());
+        System.out.println(connectToPort);
         
         if(b == connectButton || b == rootButton){
             if(b == connectButton){
-                ParentConnection.getInstance().setParent(new NetworkNode(addressTextField.getText(), Integer.parseInt(portTextField.getText())));
+                ParentConnection.getInstance().setParent(new NetworkNode(addressTextField.getText(), connectToPort));
                 ParentConnection.getInstance().start();
             }
             
@@ -47,7 +85,6 @@ public class ConnectPageController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }    
     
 }

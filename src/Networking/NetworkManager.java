@@ -18,9 +18,12 @@ import Networking.Messages.SearchResult;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,8 +39,7 @@ public class NetworkManager {
     private static NetworkManager instance;
     private final ArrayList<Connection> child;
     private ConnectionListener connectionListener;
-    private boolean[] ports;
-    private boolean[] uploadPorts;
+    private int networkConnectionListenerPort, networkMessagesPort, downloadRequestListenerPort, fileTransferPort;
     private ArrayList<DownloadConnection> downloadConnections;
     private ArrayList<UploadConnection> uploadConnections;
     private String currentSearchQuery;
@@ -47,10 +49,12 @@ public class NetworkManager {
         child = new ArrayList<>();
         downloadConnections = new ArrayList<>();
         uploadConnections = new ArrayList<>();
-        connectionListener = new ConnectionListener();
-        ports = new boolean[100];
-        uploadPorts = new boolean[100];
         shutdownCalled = false;
+        
+        /*networkConnectionListenerPort = 50000;
+        networkMessagesPort = 50001;
+        downloadRequestListenerPort = 50002;
+        fileTransferPort = 50003;*/
     }
     
     public static NetworkManager getInstance(){
@@ -60,54 +64,49 @@ public class NetworkManager {
         return instance;
     }
     
-    public int reservePort(){
-        int port = -1;
-        
-        for(int i = 0; i < 100; i++){
-            if(ports[i] == false){
-                port = i + 50001;
-                i = 100;
-            }
-        }
-        
-        return port;
+    public void setNetworkConnectionListenerPort(int port){
+        networkConnectionListenerPort = port;
     }
     
-    public int reserveUploadPort(){
-        int port = -1;
-        
-        for(int i = 0; i < 100; i++){
-            if(uploadPorts[i] == false){
-                uploadPorts[i] = true;
-                port = i + 50102;
-                i = 100;
-            }
-        }
-        
-        return port;
+    public void setNetworkMessagesPort(int port){
+        networkMessagesPort = port;
     }
     
-    public void freePort(int port){
-        if(port >= 0 && port < 100)
-            ports[port] = false;
+    public void setDownloadRequestListenerPort(int port){
+        downloadRequestListenerPort = port;
     }
     
-    public void freeUploadPort(int port){
-        if(port >= 0 && port < 100){
-            uploadPorts[port] = false;
-        }
+    public void setFileTransferPort(int port){
+        fileTransferPort = port;
     }
+    
+    public int getNetworkConnectionListenerPort(){
+        return networkConnectionListenerPort;
+    }
+    
+    public int getDownloadRequestListenerPort(){
+        return downloadRequestListenerPort;
+    }
+     
+    public int getNetworkMessagesPort(){
+        return networkMessagesPort;
+    }
+    
+    public int getFileTransferPort(){
+        return fileTransferPort;
+    }
+    
     
     public void startListening(){
+        connectionListener = new ConnectionListener();
         connectionListener.start();
+        UploadListener.getInstance().start();
     }
     
     public void stopListening(){
         connectionListener.stopRunning();
+        UploadListener.getInstance().stopRunning();
         
-        for(int i = 0; i < 100; i++){
-            ports[i] = false;
-        }
     }
     
     public void addConnection(Connection connection){
@@ -134,7 +133,7 @@ public class NetworkManager {
     
     public void removeUploadConnection(UploadConnection toRemove){
         uploadConnections.remove(toRemove);
-        freeUploadPort(toRemove.getPort());
+        //freeUploadPort(toRemove.getPort());
     }
     
     public void search(String searchQuery){
@@ -142,7 +141,8 @@ public class NetworkManager {
         SearchQuery search = new SearchQuery(searchQuery);
         
         try {
-            search.addVisited(new NetworkNode(InetAddress.getLocalHost().getHostAddress()));
+            search.addVisited(new NetworkNode(InetAddress.getLocalHost().getHostAddress(), 
+                    getMACAddress()));
             
             if(ParentConnection.getInstance().isReady()){
                 ParentConnection.getInstance().sendMessage(search);
@@ -161,6 +161,7 @@ public class NetworkManager {
     public void sendResponse(Message message){
         if(message instanceof SearchResult){
             try {
+                System.out.println("--sendResponse SearchResult--");
                 SearchResult result = (SearchResult)message;
                 int nextInd = result.getVisited().size()-1;
                 NetworkNode nextNode = null;
@@ -171,8 +172,9 @@ public class NetworkManager {
                         result.getVisited().remove(nextInd);
                     nextNode = result.getVisited().get(result.getVisited().size()-1);
                 }
-                else if(result.getVisited().get(0).getAddress().compareTo(InetAddress.getLocalHost().getHostAddress()) == 0){
-                    
+                //else if(result.getVisited().get(0).getAddress().compareTo(InetAddress.getLocalHost().getHostAddress()) == 0){
+                else if(Util.Utilities.sameMAC(result.getVisited().get(0).getMACAddress(), 
+                        NetworkManager.getInstance().getMACAddress())){
                     
                     addToSearchList(result);
                     return;
@@ -182,13 +184,24 @@ public class NetworkManager {
                 
                 System.out.println(InetAddress.getLocalHost().getHostAddress()+" --- "+result.getVisited().get(0).getAddress());
                 
-                if(ParentConnection.getInstance().isReady() && ParentConnection.getInstance().getAddress().compareTo(nextNode.getAddress()) == 0){
+                if(ParentConnection.getInstance().isReady() && Util.Utilities.sameMAC(ParentConnection.getInstance().getMAC(), nextNode.getMACAddress())){
                     ParentConnection.getInstance().sendMessage(result);
                 }
                 
                 for(int i = 0; i < child.size(); i++){
                     System.out.println(nextNode.getAddress()+" --- "+child.get(i).getSocket().getInetAddress().getHostAddress());
-                    if(nextNode.getAddress().compareTo(child.get(i).getSocket().getInetAddress().getHostAddress()) == 0){
+                    //print MAC
+                    for(int k = 0; k < nextNode.getMACAddress().length; k++)
+                        System.out.print(nextNode.getMACAddress()[k]+" ");
+                    System.out.println("--- ");
+                    for(int k = 0; k < child.get(i).getMAC().length; k++)
+                        System.out.print(child.get(i).getMAC()[k]+" ");
+                    System.out.println();
+                   
+                    //END
+                    
+                    // if(Util.Utilities.sameMAC(child.get(i).getMAC(), result.getVisited().get(result.getVisited().size()-1).getMACAddress())){
+                   {
                         child.get(i).sendMessage(result);
                         System.out.println("NETWORK MANAGER: SENT response to child");
                     }
@@ -198,7 +211,22 @@ public class NetworkManager {
                 Logger.getLogger(NetworkManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        if(message instanceof SearchQuery){
+            SearchQuery search = (SearchQuery) message;
+            
+            if(ParentConnection.getInstance().isReady() && !Util.Utilities.visited(new NetworkNode(ParentConnection.getInstance().getAddress()), search.getVisited())){
+                ParentConnection.getInstance().sendMessage(search);
+            }
+            
+            for(int i = 0; i<child.size(); i++){
+                if(!Util.Utilities.visited(new NetworkNode(child.get(i).getSocket().getInetAddress().getHostAddress(), child.get(i).getMAC()), search.getVisited()))
+                    child.get(i).sendMessage(search);
+            }
+        }
+        
     }
+    
     
     public void addToSearchList(SearchResult result){
         Platform.runLater(new Runnable(){
@@ -224,6 +252,29 @@ public class NetworkManager {
                 }
             }
         });
+    }
+    
+    
+    public byte[] getMACAddress() {
+        byte[] MAC = null;
+        
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            NetworkInterface current;
+
+            while (networkInterfaces.hasMoreElements()) {
+                current = networkInterfaces.nextElement();
+                MAC = current.getHardwareAddress();
+                
+                if (MAC != null && (MAC[MAC.length-1]) != -32) {
+                    break;
+                }
+            }
+        } catch (SocketException ex) {
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return MAC;
     }
     
     public void downloadFile(OwnedFile toDownload){

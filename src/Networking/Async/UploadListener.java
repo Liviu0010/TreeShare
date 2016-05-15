@@ -12,6 +12,8 @@ import Networking.PrivateRequests.DownloadRequest;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -29,7 +31,7 @@ public class UploadListener extends NetworkThread{
     
     private UploadListener(){
         try {
-            serverSocket = new ServerSocket(50101, 100);
+            serverSocket = new ServerSocket(NetworkManager.getInstance().getDownloadRequestListenerPort(), 100);
         } catch (IOException ex) {
             Logger.getLogger(UploadListener.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,11 +58,11 @@ public class UploadListener extends NetworkThread{
         ConnectionResponse response;
         UploadConnectionListener uploadConnectionListener;
         int port;
-        
+        System.out.println("Upload listener -- started listening");
         while(running){
             try {
                 current = serverSocket.accept();
-                
+                System.out.println("RECEIVED DOWNLOAD REQUEST");
                 current.setSoTimeout(10000);
                 
                 objectOutputStream = new ObjectOutputStream(current.getOutputStream());
@@ -69,11 +71,13 @@ public class UploadListener extends NetworkThread{
                 message = (DownloadRequest) objectInputStream.readObject();
                 
                 try{
-                    port = NetworkManager.getInstance().reserveUploadPort();
-                    response = new ConnectionResponse(port);
-                    response.addVisited(new NetworkNode(port));
+                    port = NetworkManager.getInstance().getFileTransferPort();
+                    response = new ConnectionResponse(port, NetworkManager.getInstance().getMACAddress());
+                    response.addVisited(new NetworkNode(InetAddress.getLocalHost().getHostAddress(),port));
                     uploadConnectionListener = new UploadConnectionListener(port, message.getFile());
                     uploadConnectionListener.start();
+                    
+                    System.out.println("Received download request from "+response.getVisited().get(0).getAddress());
                     
                     objectOutputStream.writeObject(response);
                 }

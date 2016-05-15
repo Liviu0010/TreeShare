@@ -51,7 +51,7 @@ public class DownloadConnection extends NetworkThread {
         
         
         try {
-            connection = new Socket(downloading.getOwner().getAddress(), 50101);
+            connection = new Socket(downloading.getOwner().getAddress(), NetworkManager.getInstance().getDownloadRequestListenerPort());
             
             objectOutputStream = new ObjectOutputStream(connection.getOutputStream());
             objectInputStream = new ObjectInputStream(connection.getInputStream());
@@ -70,8 +70,6 @@ public class DownloadConnection extends NetworkThread {
             }
             
             connection = new Socket(downloading.getOwner().getAddress(), response.getAssignedPort());
-            
-            NetworkManager.getInstance().addDownloadConnection(this);
             
             inputStream = connection.getInputStream();
             fileOutputStream = new FileOutputStream(downloading.getName());

@@ -13,6 +13,8 @@ import Networking.NetworkNode;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -27,7 +29,7 @@ public class ConnectionListener extends NetworkThread{
     
     public ConnectionListener(){
         try {
-            serverSocket = new ServerSocket(50000, 100);
+            serverSocket = new ServerSocket(NetworkManager.getInstance().getNetworkConnectionListenerPort(), 100);
         } catch (IOException ex) {
             Logger.getLogger(ConnectionListener.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,12 +55,12 @@ public class ConnectionListener extends NetworkThread{
                 msg = (Message) objectInputStream.readObject();
                 
                 if(msg instanceof ConnectionRequest){
-                    port = NetworkManager.getInstance().reservePort();
-                    response = new ConnectionResponse(port);
+                    port = NetworkManager.getInstance().getNetworkMessagesPort();
+                    response = new ConnectionResponse(port, NetworkManager.getInstance().getMACAddress());
                     response.addVisited(new NetworkNode(port));
                     
                     //listens for incoming connections on that port
-                    listener = new Listener(port);
+                    listener = new Listener(port, ((ConnectionRequest)msg).getMAC());
                     listener.start();
                     //
                     

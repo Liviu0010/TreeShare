@@ -61,6 +61,10 @@ public class MainPageController implements Initializable {
         if(b == sharedFilesButton){
             System.out.println("Switching to Shared Files page");
             ((Stage)b.getScene().getWindow()).setScene(SceneHolder.getInstance().getSharePage());
+            byte[] arr = NetworkManager.getInstance().getMACAddress();
+            for(int i = 0; i < arr.length; i++)
+                System.out.print(arr[i]+" ");
+            System.out.println();
         }
     }
     
@@ -70,7 +74,6 @@ public class MainPageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         DisplayedData.getInstance().setSearchResults(resultList);
-        
         
     }    
     

@@ -17,8 +17,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,10 +32,11 @@ import java.util.logging.Logger;
 public class Connection extends NetworkThread{
     Socket connection;
     ObjectOutputStream objectOutputStream;
+    byte[] MAC;
     
-    
-    public Connection(Socket connectionSocket){
+    public Connection(Socket connectionSocket, byte[] MAC){
         connection = connectionSocket;
+        this.MAC = MAC;
     }
     
     @Override
@@ -49,7 +53,7 @@ public class Connection extends NetworkThread{
             while(running){
                 msg = (Message) objectInputStream.readObject();
                 
-                System.out.println(msg.getVisited().get(0).getAddress()+":"+msg.getVisited().get(0).getPort());
+                System.out.println(msg.getVisited().get(0).getMACAddress()+":"+msg.getVisited().get(0).getPort());
                 
                 if(msg instanceof SearchQuery){
                     SearchQuery search = (SearchQuery)msg;
@@ -59,19 +63,23 @@ public class Connection extends NetworkThread{
                     
                     for(int i = 0; i < shared.size(); i++){
                         if(shared.get(i).getName().toLowerCase().contains(search.getSearchString().toLowerCase()))
-                            results.add(new OwnedFile(shared.get(i), new NetworkNode(InetAddress.getLocalHost().getHostAddress())));
+                            results.add(new OwnedFile(shared.get(i), new NetworkNode(InetAddress.getLocalHost().getHostAddress(), 
+                            NetworkManager.getInstance().getMACAddress())));
                     }
                     
                     result = new SearchResult(results);
                     
-                    search.addVisited(new NetworkNode(InetAddress.getLocalHost().getHostAddress()));
+                    search.addVisited(new NetworkNode(InetAddress.getLocalHost().getHostAddress(),
+                        NetworkManager.getInstance().getMACAddress()));
                     
                     for(int i = 0; i < search.getVisited().size(); i++){
                         result.addVisited(search.getVisited().get(i));
                     }
                     
                     System.out.println("CONNECTION: sent search result");
-                    NetworkManager.getInstance().sendResponse(result);      
+                    Util.Utilities.displayMAC(System.out, search.getVisited().get(0).getMACAddress());
+                    NetworkManager.getInstance().sendResponse(search);
+                    NetworkManager.getInstance().sendResponse(result);
                 }
                 
                 if(msg instanceof SearchResult){
@@ -93,6 +101,10 @@ public class Connection extends NetworkThread{
     
     public Socket getSocket(){
         return connection;
+    }
+    
+    public byte[] getMAC(){
+        return MAC;
     }
     
     //to be called by outsiders

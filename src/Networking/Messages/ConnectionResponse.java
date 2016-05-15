@@ -11,12 +11,18 @@ package Networking.Messages;
  */
 public class ConnectionResponse extends Message{
     private int assignedPort;
+    private byte[] MAC;
     
-    public ConnectionResponse(int assignedPort){
+    public ConnectionResponse(int assignedPort, byte[] MAC){
         this.assignedPort = assignedPort;
+        this.MAC = MAC;
     }
     
     public int getAssignedPort(){
         return assignedPort;
+    }
+    
+    public byte[] getMAC(){
+        return MAC;
     }
 }

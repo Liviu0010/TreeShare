@@ -20,13 +20,16 @@ import java.util.logging.Logger;
 public class Listener extends NetworkThread{
     int port;
     ServerSocket serverSocket;
+    byte[] MAC;
     
-    public Listener(int port){
+    public Listener(int port, byte[] MAC){
         try {
             serverSocket = new ServerSocket(port, 0);
         } catch (IOException ex) {
             Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        this.MAC = MAC;
     }
     
     @Override
@@ -37,9 +40,10 @@ public class Listener extends NetworkThread{
         try {
             serverSocket.setSoTimeout(60000);   //only waits for 60 seconds
             socket = serverSocket.accept();
+            //socket.setSoTimeout(10000);
             
             if(socket != null){
-                connection = new Connection(socket);
+                connection = new Connection(socket, MAC);
                 NetworkManager.getInstance().addConnection(connection);
                 connection.start();
             }
