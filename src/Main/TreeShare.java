@@ -43,8 +43,9 @@ public class TreeShare extends Application {
         stage.setWidth(900);
         stage.setHeight(700);
         stage.setScene(scene);
+        stage.setMinWidth(400);
+        stage.setMinHeight(380);
         stage.show();
-        //NetworkManager.getInstance().updateSearchList(new SearchResult(new ArrayList<OwnedFile>()));
     }
     
     @Override
