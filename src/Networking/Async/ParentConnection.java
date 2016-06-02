@@ -14,6 +14,7 @@ import Networking.Messages.SearchResult;
 import Networking.NetworkManager;
 import Networking.NetworkNode;
 import Networking.OwnedFile;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -98,12 +99,12 @@ public class ParentConnection extends NetworkThread{
             System.out.println("Connected to "+connection.getInetAddress().getHostAddress()+" on port "+connection.getPort());
             
             while(running){
-                try{
-                networkMessage = (Message) objectInputStream.readObject();
-                }
-                catch(SocketException ex){
-                    if(running){
-                        Logger.getLogger(ParentConnection.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    networkMessage = (Message) objectInputStream.readObject();
+                } catch (SocketException | EOFException ex) {
+                    if (running) {
+                        System.out.println("Connection with the parent has been lost");
+                        this.stopRunning();
                     }
                 }
                 
@@ -152,7 +153,8 @@ public class ParentConnection extends NetworkThread{
             objectInputStream = null;
             
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ParentConnection.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Connection with the parent has been lost");
+            this.stopRunning();
         }
     }
     

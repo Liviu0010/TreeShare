@@ -95,7 +95,12 @@ public class Connection extends NetworkThread{
             connection.close();
             
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            if(ex instanceof SocketException){
+                NetworkManager.getInstance().removeConnction(this);
+                System.out.println("connection with "+connection.getInetAddress().getHostAddress()+" has been lost");
+            }
+            else
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

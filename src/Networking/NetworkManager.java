@@ -303,6 +303,10 @@ public class NetworkManager {
         return shutdownCalled;
     }
     
+    public void removeConnction(Connection toRemove){
+        child.remove(toRemove);
+    }
+    
     public void stopAll(){
         UploadListener.getInstance().stopRunning();
         
