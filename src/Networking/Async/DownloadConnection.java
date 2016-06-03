@@ -51,9 +51,6 @@ public class DownloadConnection extends NetworkThread {
         
         
         try {
-            if(connection == null){
-                return;
-            }
             connection = new Socket(downloading.getOwner().getAddress(), NetworkManager.getInstance().getDownloadRequestListenerPort());
             
             objectOutputStream = new ObjectOutputStream(connection.getOutputStream());
