@@ -215,7 +215,7 @@ public class NetworkManager {
         if(message instanceof SearchQuery){
             SearchQuery search = (SearchQuery) message;
             
-            if(ParentConnection.getInstance().isReady() && !Util.Utilities.visited(new NetworkNode(ParentConnection.getInstance().getAddress()), search.getVisited())){
+            if(ParentConnection.getInstance().isReady() && !Util.Utilities.visited(new NetworkNode(ParentConnection.getInstance().getAddress(), ParentConnection.getInstance().getMAC()), search.getVisited())){
                 ParentConnection.getInstance().sendMessage(search);
             }
             

@@ -74,8 +74,7 @@ public class ConnectPageController implements Initializable {
         
         if(b == connectButton || b == rootButton){
             if(b == connectButton){
-                ParentConnection.getInstance().setParent(new NetworkNode(addressTextField.getText(), connectToPort));
-                ParentConnection.getInstance().start();
+                NetworkManager.getInstance().connectTo(new NetworkNode(addressTextField.getText(), connectToPort));
             }
             
             NetworkManager.getInstance().startListening();
